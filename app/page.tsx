@@ -214,34 +214,26 @@ export default function Home() {
         <h1 className="text-2xl font-semibold">South African Tax Hub</h1>
         <p className="text-muted mt-1 max-w-3xl text-sm">
           Every major South African tax for the 2026/2027 year, calculated live and shown with the
-          full working. Pick a tax on the left, change the inputs, and the answer and its explanation
-          update as you type.
+          full working. Choose a tax, change the inputs, and the answer and its explanation update as
+          you type.
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-[230px_1fr] gap-5">
-        {/* nav */}
-        <nav className="card p-3 h-fit text-sm">
+      {/* tax type dropdown */}
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <span className="field-label">Choose a tax</span>
+        <select className="max-w-xs" value={showRates ? "__rates" : activeId}
+          onChange={(e) => { const v = e.target.value; if (v === "__rates") setShowRates(true); else select(v); }}>
           {GROUPS.map((g) => (
-            <div key={g} className="mb-2">
-              <p className="field-label px-2 py-1">{g}</p>
-              {CALCS.filter((c) => c.group === g).map((c) => (
-                <button key={c.id} onClick={() => select(c.id)}
-                  className={`w-full text-left px-2 py-1.5 rounded-md ${
-                    !showRates && activeId === c.id ? "bg-accent text-[var(--accent-ink)] font-semibold" : "text-muted hover:text-foreground"}`}>
-                  {c.label}
-                </button>
-              ))}
-            </div>
+            <optgroup key={g} label={g}>
+              {CALCS.filter((c) => c.group === g).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+            </optgroup>
           ))}
-          <div className="border-t border-border pt-2 mt-1">
-            <button onClick={() => setShowRates(true)}
-              className={`w-full text-left px-2 py-1.5 rounded-md ${showRates ? "bg-accent text-[var(--accent-ink)] font-semibold" : "text-muted hover:text-foreground"}`}>
-              Rate book 2026/27
-            </button>
-          </div>
-        </nav>
+          <option value="__rates">Rate book 2026/27</option>
+        </select>
+      </div>
 
+      <div>
         {showRates ? <RateBook /> : (
           <div className="grid md:grid-cols-[300px_1fr] gap-5">
             {/* form */}
